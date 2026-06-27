@@ -39,7 +39,7 @@ def get_all_students():
 
 
 def create_student(new_name,face_embeddings=None,voice_embeddings=None):
-    data={'new_name':new_name,'face_embeddings':face_embeddings,'voice_embeddings':voice_embeddings}
+    data={'name':new_name,'face_embeddings':face_embeddings,'voice_embeddings':voice_embeddings}
 
     response=supabase.table('students').insert(data).execute()
 
@@ -66,4 +66,26 @@ def get_teacher_subjects(teacher_id):
     return subjects
 
 
+def enroll_student_to_subject(student_id,subject_id):
+    data={'student_id':student_id,'subject_id':subject_id}
 
+    response=supabase.table('subject_students').insert(data).execute()
+
+    return response.data
+
+def unenroll_student_to_subject(student_id,subject_id):
+    data={'student_id':student_id,'subject_id':subject_id}
+
+    response=supabase.table('subject_students').delete().eq('student_id',student_id).eq('subject_id',subject_id).execute()
+
+    return response.data
+
+
+
+def get_student_subjects(student_id):
+    response=supabase.table('subject_students').select('*, subjects(*)').eq('student_id',student_id).execute()
+    return response.data
+
+def get_student_attendance(student_id):
+    response=supabase.table('attendance_logs').select('*, subjects(*)').eq('student_id',student_id).execute()
+    return response.data
