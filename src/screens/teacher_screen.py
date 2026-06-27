@@ -6,6 +6,7 @@ from src.components.footer import footer_dashboard
 from src.components.subject_card import subject_card
 from src.database.db import check_teacher_exist,create_teacher,teacher_login,get_teacher_subjects
 from src.components.dialog_create_subject import create_subject_dialog
+from src.components.dialog_share_subject import share_subject_dialog
 def teacher_screen():
     style_background_dashboard()
     style_base_layout()
@@ -73,40 +74,41 @@ def teacher_tab_take_attendance():
 
 
 def teacher_tab_manage_subjects():
-    teacher_id=st.session_state.teacher_data["teacher_id"]
-    col1,col2=st.columns(2)
+    teacher_id = st.session_state.teacher_data["teacher_id"]
+    col1, col2 = st.columns(2)
     with col1:
-        st.header("Manage Subjects",width="stretch")
+        st.header("Manage Subjects")
     with col2:
-        if st.button("Create new Subject",width="stretch"):
+        if st.button("Create new Subject", width="stretch"):
             create_subject_dialog(teacher_id)
-    
 
-    #LIST ALL SUBJECTS
-    subjects=get_teacher_subjects(teacher_id)
+    subjects = get_teacher_subjects(teacher_id)
+
     if subjects:
         for sub in subjects:
-            stats=[
-                ("","Students",sub['total_students']),
-                ("","Classes",sub["total_classes"])
-
+            stats = [
+                ("", "Students", sub['total_students']),
+                ("", "Classes", sub["total_classes"]),
             ]
-        def share_btn():
-            if st.button(f"Share Code {sub['name']}",key=f"share_{sub['subject_code']}",icon=":material/share:"):
-                share_subject_dialog(sub['name'],sub['subject_code'])
-                st.space()
 
-                
+            def share_btn(sub=sub):   # default arg captures current sub
+                if st.button(
+                    f"Share Code {sub['name']}",
+                    key=f"share_{sub['subject_code']}",
+                    icon=":material/share:"
+                ):
+                    share_subject_dialog(sub['name'],sub['subject_code'])
+                    st.space()
+
             subject_card(
                 name=sub['name'],
                 code=sub['subject_code'],
                 section=sub['section'],
                 stats=stats,
                 footer_callback=share_btn
-
             )
     else:
-        st.info("NO SUbject Found,Create one Above")
+        st.info("No Subject Found, Create one Above")
 
 def teacher_tab_attendance_records():
     st.header("Attendance Records")
