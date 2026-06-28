@@ -16,9 +16,10 @@ setuptools
 supabase
 bcrypt
 
+
+#working with images
 segno
 pillow
-
 
 
 #voice-recognition
