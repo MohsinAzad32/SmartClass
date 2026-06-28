@@ -61,10 +61,9 @@ def process_bulk_audio(audio_bytes,candidate_dict,threshold=0.65):
             sid,score=identify_speaker(embedding,candidate_dict,threshold)
 
             if sid:
-                if sid not in identify_speaker or score >identify_results[sid]:
+                if sid not in identify_results or score >identify_results[sid]:
                     identify_results[sid]
         return identify_results
     except Exception as e:
         st.error('Bulk process error')
-
         return {}
