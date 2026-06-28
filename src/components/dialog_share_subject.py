@@ -12,6 +12,7 @@ def share_subject_dialog(subject_name,subject_code):
 
     qr=segno.make(join_url)
 
+
     out=io.BytesIO()
 
     qr.save(out,kind="png",scale=10,border=1)
